@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0d1117">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ФиксиШоу">
+<meta name="mobile-web-app-capable" content="yes">
+<title>ФиксиШоу Египет 2026</title>
+
+<!-- PWA Manifest inline -->
+<script>
+const manifestData = {
+  name: "ФиксиШоу Египет 2026",
+  short_name: "ФиксиШоу",
+  description: "Панель администратора проекта ФиксиШоу в отелях Египта",
+  start_url: ".",
+  display: "standalone",
+  background_color: "#0d1117",
+  theme_color: "#f4a024",
+  orientation: "portrait",
+  icons: [
+    { src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%23f4a024'/><text x='50%25' y='55%25' font-size='110' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif'>🎪</text></svg>", sizes: "192x192", type: "image/svg+xml" }
+  ]
+};
+const blob = new Blob([JSON.stringify(manifestData)], {type:'application/json'});
+const manifestUrl = URL.createObjectURL(blob);
+document.write('<link rel="manifest" href="'+manifestUrl+'">');
+</script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap');
+
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2333;
+  --border: #30363d;
+  --accent: #f4a024;
+  --accent2: #e85d04;
+  --blue: #58a6ff;
+  --green: #3fb950;
+  --red: #f85149;
+  --purple: #bc8cff;
+  --teal: #39d0d8;
+  --pink: #ff6eb4;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --radius: 14px;
+  --nav-h: 72px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ===== HEADER ===== */
+.header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: calc(56px + var(--safe-top));
+  padding-top: var(--safe-top);
+  background: linear-gradient(135deg, #1a0800 0%, #0d1117 60%, #001520 100%);
+  border-bottom: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 16px;
+  padding-right: 16px;
+  z-index: 1000;
+}
+
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 2px;
+  color: var(--accent);
+  line-height: 1;
+}
+.logo-sub { font-size: 11px; letter-spacing: 1px; color: var(--teal); display: block; }
+
+.header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.live-clock {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: var(--text);
+}
+.hotel-badge {
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+  color: #000;
+  font-size: 9px;
+  font-weight: 900;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== SCREEN ===== */
+.screens {
+  position: fixed;
+  top: calc(56px + var(--safe-top));
+  bottom: calc(var(--nav-h) + var(--safe-bottom));
+  left: 0; right: 0;
+  overflow: hidden;
+}
+
+.screen {
+  display: none;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 16px 14px 20px;
+}
+.screen.active { display: block; }
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: calc(var(--nav-h) + var(--safe-bottom));
+  padding-bottom: var(--safe-bottom);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  padding-top: 8px;
+  z-index: 1000;
+}
+
+.nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 12px;
+  transition: all 0.15s;
+  min-width: 52px;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+.nav-btn:active { transform: scale(0.92); opacity: 0.7; }
+.nav-btn.active { background: rgba(244,160,36,0.12); }
+.nav-icon { font-size: 22px; line-height: 1; }
+.nav-label {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+}
+.nav-btn.active .nav-label { color: var(--accent); }
+
+/* ===== SECTION TITLE ===== */
+.s-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 2px;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+/* ===== DASHBOARD ===== */
+.today-card {
+  background: linear-gradient(135deg, rgba(244,160,36,0.15), rgba(232,93,4,0.08));
+  border: 1px solid rgba(244,160,36,0.4);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.today-time {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 52px;
+  color: var(--accent);
+  letter-spacing: 3px;
+  line-height: 1;
+}
+.today-date { font-size: 12px; color: var(--muted); font-weight: 700; margin-top: 2px; }
+.today-rows { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.today-row-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+.today-row-val { font-size: 15px; font-weight: 800; color: var(--text); margin-top: 1px; }
+.today-row-sub { font-size: 12px; color: var(--teal); }
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+.stat-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+.stat-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  color: var(--accent);
+  line-height: 1.1;
+}
+.stat-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.alert-card {
+  display: flex;
+  gap: 10px;
+  background: rgba(248,81,73,0.1);
+  border: 1px solid rgba(248,81,73,0.4);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.alert-card .ai { font-size: 20px; }
+.alert-card .at { font-size: 13px; font-weight: 700; }
+.alert-card .as { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.info-card {
+  display: flex;
+  gap: 10px;
+  background: rgba(88,166,255,0.1);
+  border: 1px solid rgba(88,166,255,0.3);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.info-card .at { color: var(--blue); }
+
+/* ===== SCHEDULE ===== */
+.day-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.day-head {
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  background: linear-gradient(90deg, rgba(244,160,36,0.1), transparent);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  touch-action: manipulation;
+}
+.day-head:active { opacity: 0.7; }
+.day-date-txt {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+.day-hotel-txt {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--teal);
+}
+.day-op-txt { font-size: 11px; color: var(--muted); }
+.day-evening-badge {
+  font-size: 10px;
+  font-weight: 900;
+  padding: 3px 8px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+.badge-show { background: var(--red); color: #fff; }
+.badge-disco { background: var(--pink); color: #fff; }
+.badge-rest { background: var(--surface2); color: var(--muted); }
+
+.day-events { display: none; }
+.day-events.open { display: block; }
+
+.ev-row {
+  display: flex;
+  gap: 10px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--border);
+  align-items: flex-start;
+}
+.ev-time {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  color: var(--blue);
+  letter-spacing: 0.5px;
+  min-width: 80px;
+  line-height: 1.3;
+}
+.ev-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.dot-show { background: var(--red); }
+.dot-animation { background: var(--green); }
+.dot-photo { background: var(--purple); }
+.dot-meal { background: var(--accent); }
+.dot-logistics { background: var(--teal); }
+.dot-prep { background: var(--blue); }
+.dot-disco { background: var(--pink); }
+
+.ev-name { font-size: 13px; font-weight: 700; line-height: 1.3; }
+.ev-detail { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* ===== CHECKLIST ===== */
+.cl-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.cl-head {
+  padding: 12px 14px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cl-prog {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 700;
+}
+.cl-bar {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  width: 50px;
+  overflow: hidden;
+  margin-left: 6px;
+}
+.cl-bar-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.3s; }
+
+.cl-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 14px;
+  border-top: 1px solid var(--border);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  min-height: 52px;
+  touch-action: manipulation;
+}
+.cl-item:active { background: rgba(255,255,255,0.04); }
+.cl-item.checked { opacity: 0.45; }
+.cl-item.checked .cl-label { text-decoration: line-through; }
+
+.cl-box {
+  width: 26px; height: 26px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.cl-item.checked .cl-box { background: var(--green); border-color: var(--green); }
+.cl-label { font-size: 14px; font-weight: 600; line-height: 1.3; }
+.cl-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* ===== TABS ===== */
+.tab-bar {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 14px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  color: var(--muted);
+  background: var(--surface2);
+  white-space: nowrap;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.tab-btn:active { opacity: 0.7; }
+.tab-btn.active { background: var(--accent); color: #000; }
+
+/* ===== EQUIPMENT ===== */
+.eq-group {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.eq-head {
+  padding: 12px 14px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  font-weight: 800;
+}
+.eq-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 14px;
+  border-top: 1px solid var(--border);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 50px;
+  touch-action: manipulation;
+}
+.eq-item:active { background: rgba(255,255,255,0.04); }
+.eq-item.checked { opacity: 0.4; }
+.eq-item.checked .eq-label { text-decoration: line-through; }
+.eq-box {
+  width: 22px; height: 22px;
+  border: 2px solid var(--border);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+.eq-item.checked .eq-box { background: var(--green); border-color: var(--green); }
+.eq-label { font-size: 13px; font-weight: 600; }
+
+/* ===== STAFF ===== */
+.staff-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.staff-ava {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent2), var(--accent));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  color: #000;
+  flex-shrink: 0;
+}
+.staff-info { flex: 1; }
+.staff-name { font-size: 16px; font-weight: 900; }
+.staff-role { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-top: 2px; }
+.staff-tasks { font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+.staff-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+/* ===== RULES ===== */
+.rule-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.rule-head {
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 800;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  touch-action: manipulation;
+}
+.rule-head:active { opacity: 0.7; }
+.rule-body { display: none; padding: 0 0 4px; }
+.rule-body.open { display: block; }
+.rule-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.rule-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-top: 6px; flex-shrink: 0; }
+
+/* ===== CONTACTS ===== */
+.contact-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  text-decoration: none;
+  color: inherit;
+}
+.contact-card:active { opacity: 0.7; }
+.contact-icon { font-size: 28px; }
+.contact-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+.contact-val { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 1px; }
+.contact-sub { font-size: 12px; color: var(--muted); }
+.call-badge {
+  margin-left: auto;
+  background: var(--green);
+  color: #000;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* ===== RESET BTN ===== */
+.reset-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+.reset-btn {
+  background: rgba(248,81,73,0.15);
+  border: 1px solid var(--red);
+  color: var(--red);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.reset-btn:active { opacity: 0.6; }
+
+/* ===== INSTALL BANNER ===== */
+.install-banner {
+  background: linear-gradient(135deg, rgba(244,160,36,0.2), rgba(57,208,216,0.1));
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.install-banner-text { flex: 1; font-size: 13px; font-weight: 700; }
+.install-banner-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.install-btn {
+  background: var(--accent);
+  color: #000;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* next event pulse */
+.next-pulse {
+  animation: npulse 2s ease-in-out infinite;
+}
+@keyframes npulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div>
+    <div class="logo">ФиксиШоу</div>
+    <span class="logo-sub">Египет 2026</span>
+  </div>
+  <div class="header-right">
+    <div class="live-clock" id="liveClock">--:--</div>
+    <div class="hotel-badge" id="hotelBadge">...</div>
+  </div>
+</header>
+
+<!-- SCREENS -->
+<div class="screens">
+
+  <!-- ===== TODAY ===== -->
+  <div class="screen active" id="s-today">
+
+    <div id="installBanner" class="install-banner" style="display:none">
+      <div style="font-size:24px">📲</div>
+      <div class="install-banner-text">
+        Установить на экран домой
+        <div class="install-banner-sub" id="installHint"></div>
+      </div>
+      <button class="install-btn" id="installBtn" onclick="handleInstall()">Установить</button>
+    </div>
+
+    <div class="s-title">📊 Сегодня</div>
+
+    <div class="today-card">
+      <div class="today-time" id="dashTime">--:--</div>
+      <div class="today-date" id="dashDate">—</div>
+      <div class="today-rows">
+        <div>
+          <div class="today-row-label">📍 Отель сегодня</div>
+          <div class="today-row-val" id="dashHotel">—</div>
+          <div class="today-row-sub" id="dashOp">—</div>
+        </div>
+        <div style="height:1px;background:var(--border);margin:4px 0"></div>
+        <div>
+          <div class="today-row-label next-pulse">⏭ Следующее событие</div>
+          <div class="today-row-val" id="dashNext">—</div>
+          <div class="today-row-sub" id="dashNextTime">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">📅 Дней</div>
+        <div class="stat-val">26</div>
+        <div class="stat-sub">28 мар — 22 апр</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">🏨 Отелей</div>
+        <div class="stat-val">5</div>
+        <div class="stat-sub">Naama·Dreams·Sultan·Sea·Albatros</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">🎪 Шоу</div>
+        <div class="stat-val">10+</div>
+        <div class="stat-sub">ФиксиШоу на сцене</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">👥 Труппа</div>
+        <div class="stat-val">6</div>
+        <div class="stat-sub">Артисты + техсостав</div>
+      </div>
+    </div>
+
+    <div class="s-title" style="font-size:20px">⚠️ Важно помнить</div>
+
+    <div class="alert-card">
+      <div class="ai">🎭</div>
+      <div>
+        <div class="at">Приход на площадку — за 30 мин до начала</div>
+        <div class="as">Задержка > 5 мин недопустима. 10+ мин — фиксируется.</div>
+      </div>
+    </div>
+    <div class="alert-card">
+      <div class="ai">📺</div>
+      <div>
+        <div class="at">Телевизор от отеля — запрос до 19:00</div>
+        <div class="as">Флаги и кронштейн — также до 19:00</div>
+      </div>
+    </div>
+    <div class="alert-card">
+      <div class="ai">🌙</div>
+      <div>
+        <div class="at">Тишина в номерах с 23:00 до 07:00</div>
+        <div class="as">Шум, музыка, собрания — недопустимы</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="ai">🚗</div>
+      <div>
+        <div class="at">Только Uber / Careem</div>
+        <div class="as">Нелицензированное такси — запрещено</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="ai">📋</div>
+      <div>
+        <div class="at">Декорация готова к 20:00, артисты на площадке в 20:15</div>
+        <div class="as">Простая анимация с детьми 15 мин до начала шоу</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCHEDULE ===== -->
+  <div class="screen" id="s-schedule">
+    <div class="s-title">📅 Расписание</div>
+    <div id="scheduleList"></div>
+  </div>
+
+  <!-- ===== CHECKLISTS ===== -->
+  <div class="screen" id="s-checks">
+    <div class="s-title">✅ Чек-листы</div>
+
+    <div class="tab-bar">
+      <div class="tab-btn active" onclick="switchCheckTab(this,'ct-arrival')">Заезд</div>
+      <div class="tab-btn" onclick="switchCheckTab(this,'ct-show')">Программа</div>
+      <div class="tab-btn" onclick="switchCheckTab(this,'ct-fixishow')">ФиксиШоу</div>
+      <div class="tab-btn" onclick="switchCheckTab(this,'ct-departure')">Переезд</div>
+    </div>
+
+    <!-- Arrival -->
+    <div id="ct-arrival">
+      <div class="reset-row"><button class="reset-btn" onclick="resetCL('arr')">↺ Сбросить</button></div>
+      <div class="cl-section">
+        <div class="cl-head">🎯 Quality Manager
+          <div class="cl-prog" id="pr-arr1">0/3</div>
+          <div class="cl-bar"><div class="cl-bar-fill" id="br-arr1" style="width:0%"></div></div>
+        </div>
+        <div class="cl-item" onclick="chk(this,'arr')"><div class="cl-box"></div><div><div class="cl-label">Check-in группы / ключи от номеров</div></div></div>
+        <div class="cl-item" onclick="chk(this,'arr')"><div class="cl-box"></div><div><div class="cl-label">Показано место носильщика и бирок</div></div></div>
+        <div class="cl-item" onclick="chk(this,'arr')"><div class="cl-box"></div><div><div class="cl-label">Все артисты поклеили бирки на багаж</div></div></div>
+      </div>
+      <div class="cl-section">
+        <div class="cl-head">🚚 Носильщики отеля
+          <div class="cl-prog" id="pr-arr2">0/3</div>
+          <div class="cl-bar"><div class="cl-bar-fill" id="br-arr2" style="width:0%"></div></div>
+        </div>
+        <div class="cl-item" onclick="chk(this,'arr')"><div class="cl-box"></div><div><div class="cl-label">Большая тележка → главная сцена</div></div></div>
+        <div class="cl-item" onclick="chk(this,'arr')"><div class="cl-box"></div><div><div class="cl-label">Тележка для 2 чемоданов + 2 кейсов</div></div></div>
+        <div class="cl-item" onclick="chk(this,'arr')"><div class="cl-box"></div><div><div class="cl-label">Постановочный сет доставлен на сцену</div></div></div>
+      </div>
+      <div class="cl-section">
+        <div class="cl-head">🎭 Шеф анимации / Entertainment Mgr
+          <div class="cl-prog" id="pr-arr3">0/4</div>
+          <div class="cl-bar"><div class="cl-bar-fill" id="br-arr3" style="width:0%"></div></div>
+        </div>
+        <div class="cl-item" onclick="chk(this,'arr')"><div class="cl-box"></div><div><div class="cl-label">Показано место хранения на сцене</div></div></div>
+        <div class="cl-item" onclick="chk(this,'arr')"><div class="cl-box"></div><div><div class="cl-label">Обсужден монтаж: DJ + подключение</div></div></div>
+        <div class="cl-item" onclick="chk(this,'arr')"><div class="cl-box"></div><div><div class="cl-label">Согласована доставка ТВ до 19:00</div></div></div>
+        <div class="cl-item" onclick="chk(this,'arr')"><div class="cl-box"></div><div><div class="cl-label">Уточнено время демонтажа после шоу</div></div></div>
+      </div>
+      <div class="cl-section">
+        <div class="cl-head">🦜 Клуб Тукан
+          <div class="cl-prog" id="pr-arr4">0/5</div>
+          <div class="cl-bar"><div class="cl-bar-fill" id="br-arr4" style="width:0%"></div></div>
+        </div>
+        <div class="cl-item" onclick="chk(this,'arr')"><div class="cl-box"></div><div><div class="cl-label">2 пластиковых кейса с крышками → Тукан</div></div></div>
+        <div class="cl-item" onclick="chk(this,'arr')"><div class="cl-box"></div><div><div class="cl-label">2 чемодана → Клуб Тукан</div></div></div>
+        <div class="cl-item" onclick="chk(this,'arr')"><div class="cl-box"></div><div><div class="cl-label">Кофры с костюмами → Клуб Тукан</div></div></div>
+        <div class="cl-item" onclick="chk(this,'arr')"><div class="cl-box"></div><div><div class="cl-label">Согласован доступ к стиральной машине</div></div></div>
+        <div class="cl-item" onclick="chk(this,'arr')"><div class="cl-box"></div><div><div class="cl-label">Илья/Илья → сцена, Коля → дет. клуб</div></div></div>
+      </div>
+    </div>
+
+    <!-- Show -->
+    <div id="ct-show" style="display:none">
+      <div class="reset-row"><button class="reset-btn" onclick="resetCL('show')">↺ Сбросить</button></div>
+      <div class="cl-section">
+        <div class="cl-head">🎮 15:30 Подготовка реквизита</div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Ваня / Радмил / Валя — готовы</div></div></div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Илья Костылев — реквизит расставлен</div></div></div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Коля — костюм Тукана готов</div></div></div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Илья Зудин — музыка настроена</div></div></div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Фиксипелки — фоновый режим</div></div></div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Разметка площадки выполнена</div></div></div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Сотрудники Тукана проинструктированы (3)</div></div></div>
+      </div>
+      <div class="cl-section">
+        <div class="cl-head">📸 18:45 Фото на ужине</div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Комната для переодевания готова</div></div></div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Костюмы принесены, головы надеты</div></div></div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Фиксики сопровождены к месту фото</div></div></div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Дежурство 30 минут</div></div></div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Головы и кофр → к главной сцене</div></div></div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Костюм в кофр, комплектность ✓</div></div></div>
+      </div>
+      <div class="cl-section">
+        <div class="cl-head">🕺 20:30 МиниДиско</div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Аним. костюмы доставлены на сцену</div></div></div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Тукан переоделся</div></div></div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Выход выполнен</div></div></div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Костюм в кофр, голова в кейс</div></div></div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Аним. головы поставлены на зарядку</div></div></div>
+      </div>
+      <div class="cl-section">
+        <div class="cl-head">🏁 Финал дня</div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Весь реквизит собран в прозрачный бокс</div></div></div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Костюмы сложены, комплектность проверена</div></div></div>
+        <div class="cl-item" onclick="chk(this,'show')"><div class="cl-box"></div><div><div class="cl-label">Сушка костюмов при необходимости</div></div></div>
+      </div>
+    </div>
+
+    <!-- FixiShow -->
+    <div id="ct-fixishow" style="display:none">
+      <div class="reset-row"><button class="reset-btn" onclick="resetCL('fsh')">↺ Сбросить</button></div>
+      <div class="cl-section">
+        <div class="cl-head">🎬 19:45 Монтаж декорации</div>
+        <div class="cl-item" onclick="chk(this,'fsh')"><div class="cl-box"></div><div><div class="cl-label">Флаги установлены (до 19:00)</div></div></div>
+        <div class="cl-item" onclick="chk(this,'fsh')"><div class="cl-box"></div><div><div class="cl-label">ТВ получен, кронштейн прикручен</div></div></div>
+        <div class="cl-item" onclick="chk(this,'fsh')"><div class="cl-box"></div><div><div class="cl-label">Декорация смонтирована</div></div></div>
+        <div class="cl-item" onclick="chk(this,'fsh')"><div class="cl-box"></div><div><div class="cl-label">Костюмы перенесены в Фиксивизор</div></div></div>
+        <div class="cl-item" onclick="chk(this,'fsh')">
+          <div class="cl-box"></div>
+          <div><div class="cl-label" style="color:var(--green);font-weight:900">✅ ДЕКОРАЦИЯ ГОТОВА К 20:00</div></div>
+        </div>
+      </div>
+      <div class="cl-section">
+        <div class="cl-head">🌟 20:15 Артисты на площадке</div>
+        <div class="cl-item" onclick="chk(this,'fsh')"><div class="cl-box"></div><div><div class="cl-label">Все артисты на площадке в 20:15</div></div></div>
+        <div class="cl-item" onclick="chk(this,'fsh')"><div class="cl-box"></div><div><div class="cl-label">Простая анимация с детьми 15 мин</div></div></div>
+        <div class="cl-item" onclick="chk(this,'fsh')">
+          <div class="cl-box"></div>
+          <div><div class="cl-label" style="color:var(--red);font-weight:900">🌟 20:30 НАЧАЛО ФИКСИШОУ</div></div>
+        </div>
+      </div>
+      <div class="cl-section">
+        <div class="cl-head">📦 21:00 После шоу</div>
+        <div class="cl-item" onclick="chk(this,'fsh')"><div class="cl-box"></div><div><div class="cl-label">Фотографирование с гостями 21:00–21:15</div></div></div>
+        <div class="cl-item" onclick="chk(this,'fsh')"><div class="cl-box"></div><div><div class="cl-label">Демонтаж декорации выполнен</div></div></div>
+        <div class="cl-item" onclick="chk(this,'fsh')"><div class="cl-box"></div><div><div class="cl-label">Весь реквизит собран</div></div></div>
+        <div class="cl-item" onclick="chk(this,'fsh')"><div class="cl-box"></div><div><div class="cl-label">Подготовка к выезду начата</div></div></div>
+      </div>
+    </div>
+
+    <!-- Departure -->
+    <div id="ct-departure" style="display:none">
+      <div class="reset-row"><button class="reset-btn" onclick="resetCL('dep')">↺ Сбросить</button></div>
+      <div class="cl-section">
+        <div class="cl-head">🧳 12:00 Подготовка к выезду</div>
+        <div class="cl-item" onclick="chk(this,'dep')"><div class="cl-box"></div><div><div class="cl-label">Выписка (check-out)</div></div></div>
+        <div class="cl-item" onclick="chk(this,'dep')"><div class="cl-box"></div><div><div class="cl-label">Загрузка сета и багажа в машину</div></div></div>
+        <div class="cl-item" onclick="chk(this,'dep')"><div class="cl-box"></div><div><div class="cl-label">Личный багаж — 6 человек (отдельно)</div></div></div>
+        <div class="cl-item" onclick="chk(this,'dep')"><div class="cl-box"></div><div><div class="cl-label">Постановочный сет укомплектован</div><div class="cl-sub">Цилиндры, кофры, стойки, флаги</div></div></div>
+        <div class="cl-item" onclick="chk(this,'dep')"><div class="cl-box"></div><div><div class="cl-label">Анимационный реквизит Тукан ✓</div><div class="cl-sub">Кейсы, обручи, сумки</div></div></div>
+      </div>
+      <div class="cl-section">
+        <div class="cl-head">🏨 На новом месте</div>
+        <div class="cl-item" onclick="chk(this,'dep')"><div class="cl-box"></div><div><div class="cl-label">Шоусет → к сцене</div></div></div>
+        <div class="cl-item" onclick="chk(this,'dep')"><div class="cl-box"></div><div><div class="cl-label">Анимационный сет → Клуб Тукан</div></div></div>
+        <div class="cl-item" onclick="chk(this,'dep')"><div class="cl-box"></div><div><div class="cl-label">Шеф анимации нового Тукана уведомлён</div></div></div>
+        <div class="cl-item" onclick="chk(this,'dep')"><div class="cl-box"></div><div><div class="cl-label">Место хранения на сцене согласовано</div></div></div>
+        <div class="cl-item" onclick="chk(this,'dep')"><div class="cl-box"></div><div><div class="cl-label">Место DJ и подключение согласованы</div></div></div>
+      </div>
+      <div class="cl-section">
+        <div class="cl-head">✈️ 22 апреля — финальный выезд</div>
+        <div class="cl-item" onclick="chk(this,'dep')"><div class="cl-box"></div><div><div class="cl-label">11:00 Трансфер в офис, реквизит сдан</div></div></div>
+        <div class="cl-item" onclick="chk(this,'dep')"><div class="cl-box"></div><div><div class="cl-label">13:45 Трансфер в аэропорт с реквизитом</div></div></div>
+        <div class="cl-item" onclick="chk(this,'dep')"><div class="cl-box"></div><div><div class="cl-label">Организована стирка костюмов</div></div></div>
+        <div class="cl-item" onclick="chk(this,'dep')">
+          <div class="cl-box"></div>
+          <div><div class="cl-label" style="color:var(--accent);font-weight:900">✈️ 16:45 ВЫЛЕТ В МОСКВУ</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== EQUIPMENT ===== -->
+  <div class="screen" id="s-equipment">
+    <div class="s-title">📦 Оборудование</div>
+    <div class="reset-row"><button class="reset-btn" onclick="resetEq()">↺ Сбросить всё</button></div>
+    <div id="eqList"></div>
+  </div>
+
+  <!-- ===== STAFF ===== -->
+  <div class="screen" id="s-staff">
+    <div class="s-title">👥 Персонал</div>
+    <div id="staffList"></div>
+
+    <div class="s-title" style="font-size:20px;margin-top:4px">📋 Регламент</div>
+    <div id="rulesList"></div>
+  </div>
+
+  <!-- ===== CONTACTS ===== -->
+  <div class="screen" id="s-contacts">
+    <div class="s-title">📞 Контакты</div>
+
+    <a class="contact-card" href="tel:123">
+      <div class="contact-icon">🚨</div>
+      <div>
+        <div class="contact-label">Полиция Египта</div>
+        <div class="contact-val" style="color:var(--red)">123</div>
+        <div class="contact-sub">Экстренный номер</div>
+      </div>
+      <div class="call-badge">Позвонить</div>
+    </a>
+    <a class="contact-card" href="tel:180">
+      <div class="contact-icon">🏥</div>
+      <div>
+        <div class="contact-label">Скорая помощь</div>
+        <div class="contact-val" style="color:var(--green)">180</div>
+        <div class="contact-sub">Медицинская помощь</div>
+      </div>
+      <div class="call-badge">Позвонить</div>
+    </a>
+    <a class="contact-card" href="tel:+20227489353">
+      <div class="contact-icon">🏛️</div>
+      <div>
+        <div class="contact-label">Посольство России (Каир)</div>
+        <div class="contact-val" style="color:var(--blue);font-size:18px">+20 2 2748-9353</div>
+        <div class="contact-sub">Консульская помощь</div>
+      </div>
+      <div class="call-badge">Позвонить</div>
+    </a>
+
+    <div class="s-title" style="font-size:20px;margin-top:8px">🏨 Маршрут отелей</div>
+    <div class="eq-group">
+      <div class="eq-head" style="color:var(--teal)">Отели тура — Шарм-эль-Шейх</div>
+      <div style="padding:0">
+        <div class="ev-row" style="border-top:none">
+          <div class="ev-dot dot-logistics" style="margin-top:4px"></div>
+          <div>
+            <div class="ev-name">Naama Waves</div>
+            <div class="ev-detail">FUN&SUN ACTIVE · 29–31 мар, 13–14 апр</div>
+          </div>
+        </div>
+        <div class="ev-row">
+          <div class="ev-dot dot-animation"></div>
+          <div>
+            <div class="ev-name">Dreams Vacation</div>
+            <div class="ev-detail">WB TRAVEL · 1–2 апр, 11–12 апр · 8 км от Naama</div>
+          </div>
+        </div>
+        <div class="ev-row">
+          <div class="ev-dot dot-show"></div>
+          <div>
+            <div class="ev-name">Sultan Gardens</div>
+            <div class="ev-detail">FUN&SUN FAMILY · 3–4 апр, 15–16 апр · 21 км</div>
+          </div>
+        </div>
+        <div class="ev-row">
+          <div class="ev-dot dot-photo"></div>
+          <div>
+            <div class="ev-name">Sea Beach</div>
+            <div class="ev-detail">FUN&SUN FAMILY · 6–7 апр, 17–19 апр · 20 км</div>
+          </div>
+        </div>
+        <div class="ev-row">
+          <div class="ev-dot dot-meal"></div>
+          <div>
+            <div class="ev-name">Albatros Palace</div>
+            <div class="ev-detail">FUN&SUN FAMILY · 8–10 апр, 20–21 апр · 23 км</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /screens -->
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-btn active" data-screen="today">
+    <div class="nav-icon">📊</div>
+    <div class="nav-label">Сегодня</div>
+  </div>
+  <div class="nav-btn" data-screen="schedule">
+    <div class="nav-icon">📅</div>
+    <div class="nav-label">Расписание</div>
+  </div>
+  <div class="nav-btn" data-screen="checks">
+    <div class="nav-icon">✅</div>
+    <div class="nav-label">Чек-листы</div>
+  </div>
+  <div class="nav-btn" data-screen="equipment">
+    <div class="nav-icon">📦</div>
+    <div class="nav-label">Реквизит</div>
+  </div>
+  <div class="nav-btn" data-screen="staff">
+    <div class="nav-icon">👥</div>
+    <div class="nav-label">Персонал</div>
+  </div>
+  <div class="nav-btn" data-screen="contacts">
+    <div class="nav-icon">📞</div>
+    <div class="nav-label">Контакты</div>
+  </div>
+</nav>
+
+<script>
+// ===================== DATA =====================
+
+const DAYS = [
+  { date:'28.мар', hotel:'✈️ Перелёт', op:'Домодедово → Шарм-эль-Шейх', ev:'—',
+    events:[{t:'21:30',n:'Сбор в Домодедово',d:'Стойки Uralairlines 97–107. Багаж 23кг+ручная кладь',tp:'logistics'},{t:'0:30→7:40',n:'Перелёт в Шарм-эль-Шейх',d:'Сергеев Ю. везёт сет со склада',tp:'logistics'}]},
+  { date:'29.мар', hotel:'Naama Waves', op:'FUN&SUN ACTIVE', ev:'заезд',
+    events:[{t:'7:00–11:00',n:'Завтрак',d:'',tp:'meal'},{t:'',n:'Заселение',d:'Чек-лист заезда!',tp:'logistics'},{t:'13:00–15:00',n:'Обед',d:'',tp:'meal'},{t:'',n:'Трансфер в офис за реквизитом',d:'Время будет уточнено',tp:'logistics'},{t:'18:00–21:00',n:'Ужин',d:'Поздний ужин 23:00–00:00',tp:'meal'}]},
+  { date:'30.мар', hotel:'Naama Waves', op:'FUN&SUN ACTIVE', ev:'МиниДиско',
+    events:[{t:'7:00–11:00',n:'Завтрак',d:'',tp:'meal'},{t:'13:00–15:00',n:'Обед',d:'',tp:'meal'},{t:'16:00',n:'Подготовка реквизита',d:'',tp:'prep'},{t:'16:15',n:'Фоновая музыка / ожидание',d:'Фиксипелки',tp:'prep'},{t:'16:30–17:30',n:'Активные игры на улице',d:'ВСЕ (аним. костюмы)',tp:'animation'},{t:'18:00–21:00',n:'Ужин',d:'',tp:'meal'},{t:'18:45–19:00',n:'Подготовка к фото',d:'',tp:'prep'},{t:'19:00–19:30',n:'Встреча гостей',d:'ВСЕ (ростовые куклы)',tp:'photo'},{t:'20:15–20:30',n:'Подготовка к МиниДиско',d:'',tp:'prep'},{t:'20:30–20:50',n:'🕺 МиниДиско',d:'Аним. костюмы',tp:'disco'},{t:'21:00',n:'Сбор / зарядка голов',d:'',tp:'prep'}]},
+  { date:'31.мар', hotel:'Naama Waves', op:'FUN&SUN ACTIVE', ev:'ФИКСИШОУ',
+    events:[{t:'7:00–11:00',n:'Завтрак',d:'',tp:'meal'},{t:'13:00–15:00',n:'Обед',d:'',tp:'meal'},{t:'16:00',n:'Подготовка реквизита',d:'',tp:'prep'},{t:'16:30–17:30',n:'Активности на станциях',d:'ВСЕ',tp:'animation'},{t:'18:00–21:00',n:'Ужин',d:'',tp:'meal'},{t:'18:45–19:00',n:'Подготовка к фото',d:'',tp:'prep'},{t:'19:00–19:30',n:'Встреча гостей',d:'ВСЕ (ростовые куклы)',tp:'photo'},{t:'19:45–20:30',n:'Монтаж (ТВ в 19:00)',d:'',tp:'prep'},{t:'20:30–21:00',n:'🌟 ФИКСИШОУ',d:'ВСЕ',tp:'show'},{t:'21:00',n:'Сбор. Подготовка к переезду',d:'',tp:'prep'}]},
+  { date:'01.апр', hotel:'Dreams Vacation', op:'WB TRAVEL', ev:'МиниДиско',
+    events:[{t:'12:00',n:'Выписка. Погрузка',d:'',tp:'logistics'},{t:'13:00',n:'Трансфер Dreams (8 км)',d:'',tp:'logistics'},{t:'7:00–11:00',n:'Завтрак',d:'',tp:'meal'},{t:'12:30–14:30',n:'Обед',d:'',tp:'meal'},{t:'16:30–17:30',n:'Активные игры (клуб)',d:'ВСЕ',tp:'animation'},{t:'18:45–19:00',n:'Подготовка к фото',d:'',tp:'prep'},{t:'19:00–19:30',n:'Встреча гостей',d:'ВСЕ (ростовые куклы)',tp:'photo'},{t:'19:00–21:30',n:'Ужин',d:'',tp:'meal'},{t:'20:30–20:50',n:'🕺 МиниДиско',d:'',tp:'disco'},{t:'21:00',n:'Сбор / зарядка',d:'',tp:'prep'}]},
+  { date:'02.апр', hotel:'Dreams Vacation', op:'WB TRAVEL', ev:'ФИКСИШОУ',
+    events:[{t:'7:00–10:00',n:'Завтрак',d:'',tp:'meal'},{t:'12:30–14:30',n:'Обед',d:'',tp:'meal'},{t:'16:30–17:30',n:'Активности на станциях',d:'ВСЕ',tp:'animation'},{t:'19:00–21:00',n:'Ужин',d:'',tp:'meal'},{t:'19:00–19:30',n:'Встреча гостей',d:'ВСЕ',tp:'photo'},{t:'19:45–20:30',n:'Монтаж',d:'ТВ в 19:00',tp:'prep'},{t:'20:30–21:00',n:'🌟 ФИКСИШОУ',d:'ВСЕ',tp:'show'},{t:'21:00',n:'Сбор. Переезд',d:'',tp:'prep'}]},
+  { date:'03.апр', hotel:'Sultan Gardens', op:'FUN&SUN FAMILY', ev:'МиниДиско',
+    events:[{t:'12:00',n:'Выписка → Sultan (21 км)',d:'',tp:'logistics'},{t:'7:00–11:00',n:'Завтрак',d:'',tp:'meal'},{t:'12:30–15:00',n:'Обед',d:'',tp:'meal'},{t:'16:30–17:30',n:'Активные игры (дет.клуб)',d:'ВСЕ',tp:'animation'},{t:'19:00–22:00',n:'Ужин',d:'Поздний 22:30–02:00',tp:'meal'},{t:'19:00–19:30',n:'Встреча гостей (терасса)',d:'ВСЕ',tp:'photo'},{t:'20:30–20:50',n:'🕺 МиниДиско',d:'',tp:'disco'},{t:'21:00',n:'Сбор / зарядка',d:'',tp:'prep'}]},
+  { date:'04.апр', hotel:'Sultan Gardens', op:'FUN&SUN FAMILY', ev:'ФИКСИШОУ',
+    events:[{t:'7:00–11:00',n:'Завтрак',d:'',tp:'meal'},{t:'12:30–15:00',n:'Обед',d:'',tp:'meal'},{t:'16:30–17:30',n:'Активности на станциях',d:'ВСЕ',tp:'animation'},{t:'19:00–19:30',n:'Встреча гостей (терасса)',d:'ВСЕ',tp:'photo'},{t:'19:00–22:00',n:'Ужин',d:'',tp:'meal'},{t:'19:45–20:30',n:'Монтаж',d:'ТВ в 19:00',tp:'prep'},{t:'20:30–21:00',n:'🌟 ФИКСИШОУ',d:'ВСЕ',tp:'show'},{t:'21:00',n:'Сбор. Переезд',d:'',tp:'prep'}]},
+  { date:'05.апр', hotel:'Dreams Vacation', op:'WB TRAVEL', ev:'Отдых',
+    events:[{t:'7:00–10:00',n:'Завтрак',d:'',tp:'meal'},{t:'13:45',n:'Трансфер Сергеева Ю. в аэропорт',d:'Перелёт в Москву 16:45',tp:'logistics'},{t:'12:30–14:30',n:'Обед',d:'',tp:'meal'},{t:'19:00–21:00',n:'Ужин',d:'',tp:'meal'}]},
+  { date:'06.апр', hotel:'Sea Beach', op:'FUN&SUN FAMILY', ev:'МиниДиско',
+    events:[{t:'12:00',n:'Выписка → Sea Beach (20 км)',d:'',tp:'logistics'},{t:'7:00–11:00',n:'Завтрак',d:'',tp:'meal'},{t:'12:30–15:00',n:'Обед',d:'',tp:'meal'},{t:'16:30–17:30',n:'Активные игры (клуб)',d:'ВСЕ',tp:'animation'},{t:'19:00–21:00',n:'Ужин',d:'Поздний 23:00–01:00, фудкорт Arena',tp:'meal'},{t:'18:30–19:00',n:'Подготовка к фото',d:'',tp:'prep'},{t:'19:00–19:30',n:'Встреча гостей',d:'ВСЕ',tp:'photo'},{t:'20:30–20:50',n:'🕺 МиниДиско',d:'',tp:'disco'},{t:'21:00',n:'Сбор / зарядка',d:'',tp:'prep'}]},
+  { date:'07.апр', hotel:'Sea Beach', op:'FUN&SUN FAMILY', ev:'ФИКСИШОУ',
+    events:[{t:'7:00–10:00',n:'Завтрак',d:'Поздний 08:00–11:00 (Panorama)',tp:'meal'},{t:'12:30–15:00',n:'Обед',d:'',tp:'meal'},{t:'16:30–17:30',n:'Активности на станциях',d:'ВСЕ',tp:'animation'},{t:'18:30–19:00',n:'Подготовка к фото',d:'',tp:'prep'},{t:'19:00–19:30',n:'Встреча гостей',d:'ВСЕ',tp:'photo'},{t:'19:00–21:00',n:'Ужин',d:'',tp:'meal'},{t:'19:45–20:30',n:'Монтаж',d:'ТВ в 19:00',tp:'prep'},{t:'20:30–21:00',n:'🌟 ФИКСИШОУ',d:'ВСЕ',tp:'show'},{t:'21:00',n:'Сбор. Переезд',d:'',tp:'prep'}]},
+  { date:'08.апр', hotel:'Albatros Palace', op:'FUN&SUN FAMILY', ev:'МиниДиско',
+    events:[{t:'12:00',n:'Выписка → Albatros (23 км)',d:'',tp:'logistics'},{t:'7:00–10:00',n:'Завтрак',d:'Поздний 08:00–11:00 (Panorama)',tp:'meal'},{t:'12:30–14:30',n:'Обед',d:'',tp:'meal'},{t:'16:30–17:30',n:'Активные игры (клуб+площадка)',d:'ВСЕ',tp:'animation'},{t:'18:30–21:00',n:'Ужин',d:'Закуски 22:00–00:00',tp:'meal'},{t:'18:45–19:00',n:'Подготовка к фото',d:'',tp:'prep'},{t:'19:00–19:30',n:'Встреча гостей',d:'ВСЕ',tp:'photo'},{t:'20:30–20:45',n:'🕺 МиниДиско',d:'',tp:'disco'},{t:'20:50',n:'Сбор / зарядка',d:'',tp:'prep'}]},
+  { date:'09.апр', hotel:'Albatros Palace', op:'FUN&SUN FAMILY', ev:'ФИКСИШОУ',
+    events:[{t:'7:00–11:00',n:'Завтрак',d:'Поздний 10:00–11:00',tp:'meal'},{t:'12:30–14:30',n:'Обед',d:'',tp:'meal'},{t:'16:30–17:30',n:'Активности на станциях',d:'ВСЕ',tp:'animation'},{t:'18:30–21:00',n:'Ужин',d:'',tp:'meal'},{t:'19:00–19:30',n:'Встреча гостей',d:'ВСЕ',tp:'photo'},{t:'19:30–20:30',n:'Монтаж',d:'ТВ в 19:00',tp:'prep'},{t:'20:15–20:45',n:'🌟 ФИКСИШОУ',d:'ВСЕ',tp:'show'},{t:'20:50',n:'Сбор. Переезд',d:'',tp:'prep'}]},
+  { date:'10.апр', hotel:'Albatros Palace', op:'FUN&SUN FAMILY', ev:'Отдых',
+    events:[{t:'7:00–11:00',n:'Завтрак',d:'',tp:'meal'},{t:'12:30–14:30',n:'Обед',d:'',tp:'meal'},{t:'18:30–21:00',n:'Ужин',d:'Закуски 22:00–00:00',tp:'meal'}]},
+  { date:'11.апр', hotel:'Dreams Vacation', op:'WB TRAVEL', ev:'МиниДиско',
+    events:[{t:'12:00',n:'Выписка → Dreams (25 км)',d:'',tp:'logistics'},{t:'7:00–11:00',n:'Завтрак',d:'',tp:'meal'},{t:'12:30–14:30',n:'Обед',d:'',tp:'meal'},{t:'16:30–17:30',n:'Активные игры (клуб)',d:'ВСЕ',tp:'animation'},{t:'19:00–21:30',n:'Ужин',d:'',tp:'meal'},{t:'19:00–19:30',n:'Встреча гостей',d:'ВСЕ',tp:'photo'},{t:'20:30–20:50',n:'🕺 МиниДиско',d:'',tp:'disco'},{t:'21:00',n:'Сбор / зарядка',d:'',tp:'prep'}]},
+  { date:'12.апр', hotel:'Dreams Vacation', op:'WB TRAVEL', ev:'ФИКСИШОУ',
+    events:[{t:'7:00–10:00',n:'Завтрак',d:'',tp:'meal'},{t:'12:30–14:30',n:'Обед',d:'',tp:'meal'},{t:'16:30–17:30',n:'Активности на станциях',d:'ВСЕ',tp:'animation'},{t:'19:00–21:00',n:'Ужин',d:'',tp:'meal'},{t:'19:00–19:30',n:'Встреча гостей',d:'ВСЕ',tp:'photo'},{t:'19:45–20:30',n:'Монтаж',d:'ТВ в 19:00',tp:'prep'},{t:'20:30–21:00',n:'🌟 ФИКСИШОУ',d:'ВСЕ',tp:'show'},{t:'21:00',n:'Сбор. Переезд',d:'',tp:'prep'}]},
+  { date:'13.апр', hotel:'Naama Waves', op:'FUN&SUN ACTIVE', ev:'МиниДиско',
+    events:[{t:'12:00',n:'Выписка → Naama (6 км)',d:'',tp:'logistics'},{t:'7:00–10:00',n:'Завтрак',d:'',tp:'meal'},{t:'13:00–15:00',n:'Обед',d:'',tp:'meal'},{t:'16:30–17:30',n:'Активные игры на улице',d:'ВСЕ',tp:'animation'},{t:'18:00–21:00',n:'Ужин',d:'Поздний 23:00–00:00',tp:'meal'},{t:'19:00–19:30',n:'Встреча гостей',d:'ВСЕ',tp:'photo'},{t:'20:30–20:50',n:'🕺 МиниДиско',d:'',tp:'disco'},{t:'21:00',n:'Сбор / зарядка',d:'',tp:'prep'}]},
+  { date:'14.апр', hotel:'Naama Waves', op:'FUN&SUN ACTIVE', ev:'ФИКСИШОУ',
+    events:[{t:'7:00–11:00',n:'Завтрак',d:'',tp:'meal'},{t:'13:00–15:00',n:'Обед',d:'',tp:'meal'},{t:'16:30–17:30',n:'Активности на станциях',d:'ВСЕ',tp:'animation'},{t:'19:00–21:00',n:'Ужин',d:'',tp:'meal'},{t:'19:00–19:30',n:'Встреча гостей',d:'ВСЕ',tp:'photo'},{t:'19:45–20:30',n:'Монтаж',d:'ТВ в 19:00',tp:'prep'},{t:'20:30–21:00',n:'🌟 ФИКСИШОУ',d:'ВСЕ',tp:'show'},{t:'21:00',n:'Сбор. Переезд',d:'',tp:'prep'}]},
+  { date:'15.апр', hotel:'Sultan Gardens', op:'FUN&SUN FAMILY', ev:'МиниДиско',
+    events:[{t:'12:00',n:'Выписка → Sultan (10 км)',d:'',tp:'logistics'},{t:'7:00–11:00',n:'Завтрак',d:'',tp:'meal'},{t:'12:30–15:00',n:'Обед',d:'',tp:'meal'},{t:'16:30–17:30',n:'Активные игры (клуб+площадка)',d:'ВСЕ',tp:'animation'},{t:'19:00–22:00',n:'Ужин',d:'Поздний 22:30–02:00',tp:'meal'},{t:'19:00–19:30',n:'Встреча гостей (терасса)',d:'ВСЕ',tp:'photo'},{t:'20:30–20:50',n:'🕺 МиниДиско',d:'',tp:'disco'},{t:'21:00',n:'Сбор / зарядка',d:'',tp:'prep'}]},
+  { date:'16.апр', hotel:'Sultan Gardens', op:'FUN&SUN FAMILY', ev:'ФИКСИШОУ',
+    events:[{t:'7:00–11:00',n:'Завтрак',d:'',tp:'meal'},{t:'12:30–15:00',n:'Обед',d:'',tp:'meal'},{t:'16:30–17:30',n:'Активности на станциях',d:'ВСЕ',tp:'animation'},{t:'19:00–22:00',n:'Ужин',d:'',tp:'meal'},{t:'19:00–19:30',n:'Встреча гостей (терасса)',d:'ВСЕ',tp:'photo'},{t:'19:45–20:30',n:'Монтаж',d:'ТВ в 19:00',tp:'prep'},{t:'20:30–21:00',n:'🌟 ФИКСИШОУ',d:'ВСЕ',tp:'show'},{t:'21:00',n:'Сбор. Переезд',d:'',tp:'prep'}]},
+  { date:'17.апр', hotel:'Sea Beach', op:'FUN&SUN FAMILY', ev:'Переезд',
+    events:[{t:'12:00',n:'Выписка → Sea Beach (20 км)',d:'',tp:'logistics'},{t:'7:00–11:00',n:'Завтрак',d:'',tp:'meal'},{t:'12:30–15:00',n:'Обед',d:'',tp:'meal'},{t:'19:00–21:00',n:'Ужин',d:'',tp:'meal'}]},
+  { date:'18.апр', hotel:'Sea Beach', op:'FUN&SUN FAMILY', ev:'МиниДиско',
+    events:[{t:'7:00–10:00',n:'Завтрак',d:'Поздний 08:00–11:00 (Panorama)',tp:'meal'},{t:'12:30–15:00',n:'Обед',d:'',tp:'meal'},{t:'16:30–17:30',n:'Активные игры (клуб)',d:'ВСЕ',tp:'animation'},{t:'19:00–21:00',n:'Ужин',d:'',tp:'meal'},{t:'19:00–19:30',n:'Встреча гостей',d:'ВСЕ',tp:'photo'},{t:'20:30–20:50',n:'🕺 МиниДиско',d:'',tp:'disco'},{t:'21:00',n:'Сбор / зарядка',d:'',tp:'prep'}]},
+  { date:'19.апр', hotel:'Sea Beach', op:'FUN&SUN FAMILY', ev:'ФИКСИШОУ',
+    events:[{t:'7:00–10:00',n:'Завтрак',d:'Поздний 08:00–11:00 (Panorama)',tp:'meal'},{t:'12:30–15:00',n:'Обед',d:'',tp:'meal'},{t:'16:30–17:30',n:'Активности на станциях',d:'ВСЕ',tp:'animation'},{t:'19:00–21:00',n:'Ужин',d:'',tp:'meal'},{t:'19:00–19:30',n:'Встреча гостей',d:'ВСЕ',tp:'photo'},{t:'19:45–20:30',n:'Монтаж',d:'ТВ в 19:00',tp:'prep'},{t:'20:30–21:00',n:'🌟 ФИКСИШОУ',d:'ВСЕ',tp:'show'},{t:'21:00',n:'Сбор. Переезд',d:'',tp:'prep'}]},
+  { date:'20.апр', hotel:'Albatros Palace', op:'FUN&SUN FAMILY', ev:'МиниДиско',
+    events:[{t:'12:00',n:'Выписка → Albatros (23 км)',d:'',tp:'logistics'},{t:'7:00–10:00',n:'Завтрак',d:'',tp:'meal'},{t:'12:30–14:30',n:'Обед',d:'',tp:'meal'},{t:'16:30–17:30',n:'Активные игры (клуб+площадка)',d:'ВСЕ',tp:'animation'},{t:'18:30–21:00',n:'Ужин',d:'Закуски 22:00–00:00',tp:'meal'},{t:'19:00–19:30',n:'Встреча гостей',d:'ВСЕ',tp:'photo'},{t:'20:30–20:45',n:'🕺 МиниДиско',d:'',tp:'disco'},{t:'20:50',n:'Сбор / зарядка',d:'',tp:'prep'}]},
+  { date:'21.апр', hotel:'Albatros Palace', op:'FUN&SUN FAMILY', ev:'ФИКСИШОУ',
+    events:[{t:'7:00–11:00',n:'Завтрак',d:'',tp:'meal'},{t:'12:30–14:30',n:'Обед',d:'',tp:'meal'},{t:'16:30–17:30',n:'Активности на станциях',d:'ВСЕ',tp:'animation'},{t:'18:30–21:00',n:'Ужин',d:'',tp:'meal'},{t:'19:00–19:30',n:'Встреча гостей',d:'ВСЕ',tp:'photo'},{t:'19:30–20:30',n:'Монтаж',d:'ТВ в 19:00',tp:'prep'},{t:'20:15–20:45',n:'🌟 ФИКСИШОУ',d:'ВСЕ',tp:'show'},{t:'21:00',n:'Сбор. Стирка костюмов. Подготовка к выезду',d:'',tp:'prep'}]},
+  { date:'22.апр', hotel:'✈️ Вылет домой', op:'Шарм-эль-Шейх → Москва', ev:'Отлёт',
+    events:[{t:'7:00–11:00',n:'Завтрак',d:'',tp:'meal'},{t:'11:00',n:'Трансфер в офис. Реквизит сдан',d:'',tp:'logistics'},{t:'12:30–14:30',n:'Обед',d:'',tp:'meal'},{t:'12:00',n:'Выписка из гостиницы',d:'',tp:'logistics'},{t:'13:45',n:'Трансфер в аэропорт с реквизитом',d:'',tp:'logistics'},{t:'16:45–23:40',n:'✈️ ВЫЛЕТ В МОСКВУ',d:'Прилёт в Домодедово',tp:'logistics'}]}
+];
+
+const EQUIPMENT = [
+  {g:'🎭 Постановочный сет',c:'var(--red)',items:['Цилиндр Нолика','Цилиндр Симка','Бокс-Трибуна (Батарейка)','Костюм Симки','Костюм Нолика','Костюм Чудакова','Кофр Помогатор','Сумка Фиксивизор','Стойка под ТВ (основание+труба+поперечина)','Утяжелители 3 шт. (3×10 кг)','Стойки правые','Стойки левые','Чемодан БЧ','Резервный чемодан','Флаги']},
+  {g:'🦜 Анимационный реквизит Тукан',c:'var(--green)',items:['Кейс «Игра на Станциях»','Кейс «Анимационные головы»','Анимационные костюмы','Чемодан «Спорт-1»','Чемодан «Спорт-2»','Обручи 4 шт.','Сумка «Костюм Тукана»']},
+  {g:'🔧 Техническое оборудование',c:'var(--blue)',items:['DJ-пульт / звуковое оборудование','Кабели и разъёмы','Зарядки для анимационных голов','Дымовая машина (выход Тукана)','Ноутбук Ильи Зудина','Флешки: Фиксипелки + шоу']},
+  {g:'🧴 Расходники и уход',c:'var(--purple)',items:['Грим по утверждённым образцам','Средства для снятия грима','Нейтральный парфюм','Иголка, нитки (ремонт)','Стиральный порошок','Вешалки для сушки']}
+];
+
+const STAFF = [
+  {i:'ВА',n:'Ваня',r:'Ведущий / Аниматор',t:'• Встреча детей\n• Ведение программы\n• Игры на знакомство\n• Координация команд'},
+  {i:'РД',n:'Радмил',r:'Аниматор',t:'• Активные игры\n• Поддержка ведущего\n• Анимационные костюмы'},
+  {i:'ВЛ',n:'Валя',r:'Аниматор',t:'• Активные игры\n• Поддержка ведущего\n• Анимационные костюмы'},
+  {i:'ИК',n:'Илья Костылев',r:'Техническая группа',t:'• Подготовка реквизита\n• Сцена: монтаж/демонтаж\n• Сопровождение'},
+  {i:'КН',n:'Коля',r:'Артист (Тукан)',t:'• Костюм Тукана\n• Выход в тумане\n• Детский клуб\n• Анимационные выходы'},
+  {i:'ИЗ',n:'Илья Зудин',r:'DJ / Муз. оформление',t:'• Фиксипелки (фон)\n• Муз. оформление шоу\n• DJ-пульт'},
+  {i:'ЮС',n:'Сергеев Ю.',r:'Quality Manager',t:'• Организация check-in\n• Транспорт сета\n• Координация с отелем\n• Вылет 02.апр'}
+];
+
+const RULES = [
+  {t:'⏰ Тайминг',items:['На площадку — за 30 мин до начала','Задержка > 5 мин недопустима','Опоздание 10+ мин — фиксируется','Тишина в номерах с 23:00 до 07:00','Самовольное изменение расписания — запрещено']},
+  {t:'👗 Форма в рабочее время',items:['Костюм: чистый, выглаженный, исправный','Хранение — только в кофре, не в номере','В полном образе — только по маршрутам шоу','Без маски в гриме, без костюма — запрещено','Переодевание — только в спецзонах']},
+  {t:'🌅 Свободное время',items:['Стиль casual/resort, одежда чистая','Учитывать религиозные нормы Египта','Топлес / нудизм — запрещены','Опьянение в общественных местах — запрещено','Вовлечение гостей в финансовые отношения — запрещено']},
+  {t:'🌍 Выход за территорию',items:['Уведомить руководителя (время выхода/возврата)','Группы от 2 человек (рекомендуется)','Заряженный телефон + контактная карточка отеля','Возврат до 23:00','Только Uber / Careem','Алкоголь — только в лицензированных заведениях']},
+  {t:'⛔ Абсолютные запреты',items:['Любые наркотики и психотропные вещества','Курение вне спецзон','Несанкционированный доступ в служебные помещения','Работа в нетрезвом виде — немедленное отстранение','Коммерческая деятельность за пределами отеля','Публичные высказывания от имени ФиксиШоу']}
+];
+
+// ===================== CLOCK =====================
+
+function getCurrentHotel() {
+  const d = new Date(), m = d.getMonth()+1, day = d.getDate();
+  if(m===3&&day===28) return '✈️ Перелёт';
+  if(m===3&&day===29) return 'Naama Waves';
+  if(m===3&&(day===30||day===31)) return 'Naama Waves';
+  if(m===4&&(day===1||day===2)) return 'Dreams Vacation';
+  if(m===4&&(day===3||day===4)) return 'Sultan Gardens';
+  if(m===4&&day===5) return 'Dreams Vacation';
+  if(m===4&&(day===6||day===7)) return 'Sea Beach';
+  if(m===4&&(day>=8&&day<=10)) return 'Albatros Palace';
+  if(m===4&&(day===11||day===12)) return 'Dreams Vacation';
+  if(m===4&&(day===13||day===14)) return 'Naama Waves';
+  if(m===4&&(day===15||day===16)) return 'Sultan Gardens';
+  if(m===4&&(day>=17&&day<=19)) return 'Sea Beach';
+  if(m===4&&(day===20||day===21)) return 'Albatros Palace';
+  if(m===4&&day===22) return '✈️ Вылет домой';
+  return 'ФиксиШоу Египет 2026';
+}
+
+function getNextEv() {
+  const d = new Date(), h = d.getHours(), mn = d.getMinutes();
+  const now = h*60+mn;
+  const evs = [
+    {m:7*60,l:'Завтрак',t:'07:00'},
+    {m:13*60,l:'Обед',t:'13:00'},
+    {m:15*60+30,l:'Подготовка реквизита',t:'15:30'},
+    {m:16*60,l:'Подготовка реквизита',t:'16:00'},
+    {m:16*60+15,l:'Фоновая музыка / ожидание',t:'16:15'},
+    {m:16*60+30,l:'Начало программы',t:'16:30'},
+    {m:18*60+30,l:'Подготовка к фото',t:'18:30'},
+    {m:18*60+45,l:'Подготовка к фото',t:'18:45'},
+    {m:19*60,l:'Встреча гостей (ростовые куклы)',t:'19:00'},
+    {m:19*60+45,l:'Монтаж декорации',t:'19:45'},
+    {m:20*60+15,l:'Артисты на площадке',t:'20:15'},
+    {m:20*60+30,l:'🌟 НАЧАЛО ШОУ / МиниДиско',t:'20:30'},
+    {m:21*60,l:'Сбор реквизита',t:'21:00'},
+  ];
+  for(const e of evs){
+    if(e.m>now){
+      const diff=e.m-now, dh=Math.floor(diff/60), dm=diff%60;
+      return {l:e.l,t:e.t,diff:dh>0?`через ${dh}ч ${dm}мин`:`через ${dm} мин`};
+    }
+  }
+  return {l:'Все события выполнены',t:'',diff:'Отличная работа!'};
+}
+
+function pad(n){ return String(n).padStart(2,'0'); }
+
+function updateClock(){
+  var d = new Date();
+  var ts = pad(d.getHours())+':'+pad(d.getMinutes());
+
+  var elClock = document.getElementById('liveClock');
+  if(elClock) elClock.textContent = ts;
+  var elDash = document.getElementById('dashTime');
+  if(elDash) elDash.textContent = ts;
+
+  var months=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  var elDate = document.getElementById('dashDate');
+  if(elDate) elDate.textContent = d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear();
+
+  var hotel = getCurrentHotel();
+  var elBadge = document.getElementById('hotelBadge');
+  if(elBadge) elBadge.textContent = hotel;
+  var elHotel = document.getElementById('dashHotel');
+  if(elHotel) elHotel.textContent = hotel;
+
+  var elOp = document.getElementById('dashOp');
+  if(elOp) elOp.textContent = 'Шарм-эль-Шейх · ТТ-Тревел';
+
+  var nxt = getNextEv();
+  var elNext = document.getElementById('dashNext');
+  if(elNext) elNext.textContent = nxt.l;
+  var elNextT = document.getElementById('dashNextTime');
+  if(elNextT) elNextT.textContent = nxt.t ? nxt.t+' — '+nxt.diff : nxt.diff;
+}
+
+// ===================== RENDER =====================
+
+function renderSchedule(){
+  const el=document.getElementById('scheduleList');
+  el.innerHTML=DAYS.map((d,i)=>{
+    const badge = d.ev==='ФИКСИШОУ'?'<span class="day-evening-badge badge-show">🌟 ФИКСИШОУ</span>':
+      d.ev==='МиниДиско'?'<span class="day-evening-badge badge-disco">🕺 МиниДиско</span>':
+      `<span class="day-evening-badge badge-rest">${d.ev}</span>`;
+    const events=d.events.map(e=>`
+      <div class="ev-row">
+        <div class="ev-time">${e.t||''}</div>
+        <div class="ev-dot dot-${e.tp}"></div>
+        <div>
+          <div class="ev-name">${e.n}</div>
+          ${e.d?`<div class="ev-detail">${e.d}</div>`:''}
+        </div>
+      </div>`).join('');
+    return `<div class="day-block">
+      <div class="day-head" onclick="toggleDay(${i})">
+        <div>
+          <div class="day-date-txt">${d.date}</div>
+          <div class="day-hotel-txt">${d.hotel}</div>
+          <div class="day-op-txt">${d.op}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          ${badge}
+          <span style="color:var(--muted);font-size:18px" id="dtgl-${i}">▼</span>
+        </div>
+      </div>
+      <div class="day-events" id="dev-${i}">${events}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderEquipment(){
+  const el=document.getElementById('eqList');
+  el.innerHTML=EQUIPMENT.map((g,gi)=>`
+    <div class="eq-group">
+      <div class="eq-head" style="color:${g.c}">${g.g}</div>
+      ${g.items.map((item,ii)=>`
+        <div class="eq-item" id="eq-${gi}-${ii}" onclick="toggleEq(${gi},${ii})">
+          <div class="eq-box" id="eqbox-${gi}-${ii}"></div>
+          <span class="eq-label">${item}</span>
+        </div>`).join('')}
+    </div>`).join('');
+}
+
+function renderStaff(){
+  const el=document.getElementById('staffList');
+  el.innerHTML=STAFF.map(s=>`
+    <div class="staff-card">
+      <div class="staff-ava">${s.i}</div>
+      <div class="staff-info">
+        <div class="staff-name">${s.n}</div>
+        <div class="staff-role">${s.r}</div>
+        <div class="staff-tasks">${s.t.replace(/\n/g,'<br>')}</div>
+      </div>
+      <div class="staff-dot"></div>
+    </div>`).join('');
+  renderRules();
+}
+
+function renderRules(){
+  const el=document.getElementById('rulesList');
+  el.innerHTML=RULES.map((r,i)=>`
+    <div class="rule-block">
+      <div class="rule-head" onclick="toggleRule(${i})">
+        <span>${r.t}</span>
+        <span style="color:var(--muted)" id="rtgl-${i}">▼</span>
+      </div>
+      <div class="rule-body" id="rbody-${i}">
+        ${r.items.map(item=>`<div class="rule-item"><div class="rule-dot"></div><div>${item}</div></div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// ===================== INTERACTIONS =====================
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  var screen = document.getElementById('s-'+id);
+  if(screen) screen.classList.add('active');
+  var btn = document.querySelector('[data-screen="'+id+'"]');
+  if(btn) btn.classList.add('active');
+}
+
+function toggleDay(i){
+  const ev=document.getElementById('dev-'+i);
+  const tgl=document.getElementById('dtgl-'+i);
+  const open=ev.classList.toggle('open');
+  tgl.textContent=open?'▲':'▼';
+}
+
+function toggleRule(i){
+  const b=document.getElementById('rbody-'+i);
+  const t=document.getElementById('rtgl-'+i);
+  b.classList.toggle('open');
+  t.textContent=b.classList.contains('open')?'▲':'▼';
+}
+
+// ===== CHECKLIST =====
+
+function chk(el, group){
+  // el may be the element or an event on iOS - normalise
+  var item = (el && el.classList) ? el : (el && el.currentTarget) ? el.currentTarget : null;
+  if(!item) return;
+  item.classList.toggle('checked');
+  var box = item.querySelector('.cl-box');
+  if(box) box.textContent = item.classList.contains('checked') ? '✓' : '';
+  saveCL(group);
+}
+
+function saveCL(g){
+  const panel=document.getElementById('ct-'+({arr:'arrival',show:'show',fsh:'fixishow',dep:'departure'}[g]||g));
+  if(!panel) return;
+  const states=Array.from(panel.querySelectorAll('.cl-item')).map(i=>i.classList.contains('checked'));
+  try{localStorage.setItem('cl-'+g,JSON.stringify(states));}catch(e){}
+}
+
+function loadCL(g, panelId){
+  try{
+    const saved=localStorage.getItem('cl-'+g);
+    if(!saved) return;
+    const states=JSON.parse(saved);
+    const panel=document.getElementById(panelId);
+    if(!panel) return;
+    panel.querySelectorAll('.cl-item').forEach((item,i)=>{
+      if(states[i]){item.classList.add('checked');item.querySelector('.cl-box').textContent='✓';}
+    });
+  }catch(e){}
+}
+
+function resetCL(g){
+  const panelMap={arr:'ct-arrival',show:'ct-show',fsh:'ct-fixishow',dep:'ct-departure'};
+  const panel=document.getElementById(panelMap[g]);
+  if(!panel) return;
+  panel.querySelectorAll('.cl-item').forEach(i=>{i.classList.remove('checked');i.querySelector('.cl-box').textContent='';});
+  try{localStorage.removeItem('cl-'+g);}catch(e){}
+}
+
+function switchCheckTab(btn, tabId){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ['ct-arrival','ct-show','ct-fixishow','ct-departure'].forEach(id=>{
+    document.getElementById(id).style.display=id===tabId?'block':'none';
+  });
+}
+
+// ===== EQUIPMENT =====
+function toggleEq(gi,ii){
+  const item=document.getElementById('eq-'+gi+'-'+ii);
+  const box=document.getElementById('eqbox-'+gi+'-'+ii);
+  item.classList.toggle('checked');
+  box.textContent=item.classList.contains('checked')?'✓':'';
+  saveEq();
+}
+
+function saveEq(){
+  const data={};
+  document.querySelectorAll('.eq-item').forEach(el=>{data[el.id]=el.classList.contains('checked');});
+  try{localStorage.setItem('eq',JSON.stringify(data));}catch(e){}
+}
+
+function loadEq(){
+  try{
+    const saved=localStorage.getItem('eq');
+    if(!saved) return;
+    const data=JSON.parse(saved);
+    Object.keys(data).forEach(id=>{
+      if(data[id]){
+        const el=document.getElementById(id);
+        if(el){el.classList.add('checked');el.querySelector('.eq-box').textContent='✓';}
+      }
+    });
+  }catch(e){}
+}
+
+function resetEq(){
+  document.querySelectorAll('.eq-item').forEach(el=>{el.classList.remove('checked');el.querySelector('.eq-box').textContent='';});
+  try{localStorage.removeItem('eq');}catch(e){}
+}
+
+// ===================== INSTALL (PWA) =====================
+let deferredPrompt=null;
+
+window.addEventListener('beforeinstallprompt',(e)=>{
+  e.preventDefault();
+  deferredPrompt=e;
+  showInstallBanner();
+});
+
+function showInstallBanner(){
+  const banner=document.getElementById('installBanner');
+  const hint=document.getElementById('installHint');
+  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+  if(isIOS){
+    banner.style.display='flex';
+    hint.textContent='Safari → Поделиться → На экран домой';
+    document.getElementById('installBtn').textContent='Как?';
+    document.getElementById('installBtn').onclick=()=>{
+      alert('На iPhone:\n1. Откройте Safari\n2. Нажмите кнопку «Поделиться» (квадрат со стрелкой)\n3. Выберите «На экран домой»\n4. Нажмите «Добавить»\n\nПриложение появится как обычная иконка!');
+    };
+  } else if(deferredPrompt){
+    banner.style.display='flex';
+    hint.textContent='Нажмите чтобы установить на Android';
+  }
+}
+
+function handleInstall(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('installBanner').style.display='none';});
+  }
+}
+
+// Проверить iOS при загрузке
+const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.navigator.standalone;
+if(isIOS){
+  setTimeout(()=>showInstallBanner(),1000);
+}
+
+// ===================== INIT =====================
+document.addEventListener('DOMContentLoaded', function(){
+  renderSchedule();
+  renderEquipment();
+  renderStaff();
+  updateClock();
+  // 1 second interval for clock
+  setInterval(updateClock, 1000);
+
+  // Nav buttons — bind both click and touchend for iOS
+  document.querySelectorAll('.nav-btn').forEach(function(btn){
+    function handleNav(e){
+      e.preventDefault();
+      e.stopPropagation();
+      var screen = btn.getAttribute('data-screen');
+      if(screen) showScreen(screen);
+    }
+    btn.addEventListener('click', handleNav);
+    btn.addEventListener('touchend', handleNav, {passive: false});
+  });
+
+  // iOS touch delegation for checklist items and equipment
+  document.addEventListener('touchend', function(e){
+    var clItem = e.target.closest('.cl-item');
+    if(clItem && clItem.hasAttribute('onclick')){
+      // already handled via onclick, skip
+      return;
+    }
+    if(clItem){
+      // find group from parent container id
+      var group = 'arr';
+      var parents = ['ct-arrival','ct-show','ct-fixishow','ct-departure'];
+      var groupMap = {'ct-arrival':'arr','ct-show':'show','ct-fixishow':'fsh','ct-departure':'dep'};
+      for(var i=0;i<parents.length;i++){
+        var p = document.getElementById(parents[i]);
+        if(p && p.contains(clItem)){ group = groupMap[parents[i]]; break; }
+      }
+      chk(clItem, group);
+    }
+    var eqItem = e.target.closest('.eq-item');
+    if(eqItem && eqItem.id){
+      var parts = eqItem.id.replace('eq-','').split('-');
+      if(parts.length===2) toggleEq(parseInt(parts[0]), parseInt(parts[1]));
+    }
+  }, {passive: true});
+  loadCL('show','ct-show');
+  loadCL('fsh','ct-fixishow');
+  loadCL('dep','ct-departure');
+  loadEq();
+  // Open today's day in schedule if relevant
+  var today=new Date(), m=today.getMonth()+1, day=today.getDate();
+  if((m===3&&day>=28)||(m===4&&day<=22)){
+    setTimeout(function(){
+      var idx=DAYS.findIndex(function(d){ return d.date.includes(String(day)); });
+      if(idx>=0) toggleDay(idx);
+    },300);
+  }
+});
+</script>
+</body>
+</html>
